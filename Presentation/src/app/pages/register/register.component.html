@@ -1,7 +1,6 @@
 <div class="tab-wrapper">
   <div class="tab-content">
-
-    <h1>Войти в TaskMan</h1>
+    <h1>Регистрация в TaskMan</h1>
     <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
       <nz-form-item>
         <nz-form-control nzErrorTip="Введите Email!">
@@ -10,6 +9,7 @@
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
+
       <nz-form-item>
         <nz-form-control nzErrorTip="Введите пароль!">
           <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
@@ -23,8 +23,21 @@
         </nz-form-control>
       </nz-form-item>
 
-      <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" [nzLoading]="loading">Войти</button>
-      <button routerLink="/register" nz-button class="login-form-button login-form-margin" [nzType]="'default'">Зарегистрироваться</button>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Повторите пароль!">
+          <nz-input-group nzPrefixIcon="lock" [nzSuffix]="confirmSuffixTemplate">
+            <input [type]="confirmPasswordVisible ? 'text' : 'password'" nz-input formControlName="confirmPassword" placeholder="Подтвердите пароль" />
+          </nz-input-group>
+          <ng-template #confirmSuffixTemplate>
+            <span nz-icon
+                  [nzType]="confirmPasswordVisible ? 'eye-invisible' : 'eye'"
+                  (click)="confirmPasswordVisible = !confirmPasswordVisible"></span>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" [nzLoading]="loading">Зарегистрироваться</button>
+      <button routerLink="/login" nz-button class="login-form-button login-form-margin" [nzType]="'default'">Уже есть аккаунт? Войти</button>
     </form>
   </div>
 </div>
