@@ -1,0 +1,31 @@
+<div class="tab-wrapper">
+  <div class="tab-content">
+
+    <h1>Войти в ЛКП</h1>
+    <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Введите Email!">
+          <nz-input-group nzPrefixIcon="user">
+            <input type="text" nz-input formControlName="email" placeholder="Email" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Введите пароль!">
+          <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password" placeholder="Пароль" />
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <span nz-icon
+                  [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                  (click)="passwordVisible = !passwordVisible"></span>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" [nzLoading]="loading">Войти</button>
+      <!--<button routerLink="/auth/register" nz-button class="login-form-button login-form-margin" [nzType]="'default'">Зарегистрироваться</button>
+      <a>Забыли пароль?</a>-->
+    </form>
+  </div>
+</div>

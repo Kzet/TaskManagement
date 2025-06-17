@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { NonAuthGuardService } from './services/guards/nonauth.guard';
+import { AuthGuardService } from './services/guards/auth.guard';
+import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
   /*{ path: '', pathMatch: 'full', redirectTo: '/welcome' },
@@ -9,6 +12,12 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./layouts/main-layout/main-layout.routes').then(
         (m) => m.MAIN_ROUTES
-      )
+      ),
+    canActivate: [AuthGuardService]
   },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [NonAuthGuardService]
+  }
 ];
