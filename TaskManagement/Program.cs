@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TaskManagement;
 using TaskManagement.Domain.Configs;
+using TaskManagement.Domain.Entities.UserEntities;
+using TaskManagement.Infrastructure.Data.SeedData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +45,22 @@ builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfi
 var jwtConfig = builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>();
 builder.Services.AddSingleton(jwtConfig);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+                          builder
+                              .SetIsOriginAllowedToAllowWildcardSubdomains()
+                              .WithOrigins("http://localhost", "http://localhost:4200",
+                                           "http://localhost:4300", "http://localhost:4400",
+                                           "http://10.1.11.62:4200", "http://0.0.0.0:4200"
+                                  )
+                              .AllowAnyMethod()
+                              .AllowAnyHeader()
+                              .WithExposedHeaders("Content-Disposition")
+                              .AllowCredentials()
+                              );
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -56,8 +74,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("CorsPolicy");
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+UserSeed.SeedDefaultUsersAsync(userManager).Wait();
 
 app.Run();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Domain.Entities.UserEntities;
+using TaskManagement.Infrastructure.Data.Mapping.User;
 
 namespace TaskManagement.Infrastructure.Data
 {
@@ -14,6 +15,7 @@ namespace TaskManagement.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationUserConfiguration).Assembly);
             base.OnModelCreating(modelBuilder);
         }
     }

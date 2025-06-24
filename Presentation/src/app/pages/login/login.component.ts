@@ -13,6 +13,9 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { AuthService } from '../../services/auth.service';
+import { AuthRequest } from '../../models/user/authRequest.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -45,6 +48,7 @@ export class LoginComponent {
 
   constructor(private fb: NonNullableFormBuilder,
     private messageService: NzMessageService,
+    private authService: AuthService,
     private router: Router)
   {
     this.validateForm = this.fb.group({
@@ -55,6 +59,32 @@ export class LoginComponent {
 
 
   submitForm() {
-
+    if (this.validateForm.valid) {
+      this.loading = true;
+      this.validateForm.patchValue({ email: this.validateForm.value.email.trim() });
+      let login: AuthRequest = this.validateForm.value as AuthRequest;
+      this.authService.login(login).subscribe({
+        next: (res) => {
+          if (res.resetToken != null) {
+            this.router.navigate(['/reset-password'], { state: { email: this.validateForm.value.email, resetToken: res.resetToken } });
+          } else {
+            this.router.navigateByUrl('/');
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          //this.loading = false;
+          //this.messageService.error(err.error.Message);
+        }
+      }).add(() => {
+        this.loading = false;
+      });
+    } else {
+      Object.values(this.validateForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 }
