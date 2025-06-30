@@ -13,7 +13,15 @@ namespace TaskManagement.Infrastructure.Data.Mapping.User
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            
+            builder.HasMany(_ => _.Projects)
+                .WithOne(_ => _.Owner)
+                .HasForeignKey(_ => _.OwnerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(_ => _.Tasks)
+                .WithOne(_ => _.Owner)
+                .HasForeignKey(_ => _.OwnerId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
