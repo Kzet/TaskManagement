@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagement.Application.Extensions;
+using TaskManagement.Application.Features.Account.Login;
+using TaskManagement.Domain.Entities.UserEntities;
 
 namespace TaskManagement.Controllers
 {
@@ -7,5 +12,23 @@ namespace TaskManagement.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
+        private readonly IMediator _mediator;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ProjectController(IMediator mediator, UserManager<ApplicationUser> userManager)
+        {
+            _mediator = mediator;
+            _userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProjectsByStatus(int statusId)
+        {
+            var user = await _userManager.FindByNameAsync(User.GetLoggedInUserName());
+            var query = new ProjectsByUserAndStatusCommand(user.Id, statusId);
+
+            var projects = await _mediator.Send(query);
+            return Ok(projects);
+        }
+
     }
 }

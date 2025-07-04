@@ -8,19 +8,25 @@ namespace TaskManagement.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController(IMediator mediator) : ControllerBase
+    public class AuthController : ControllerBase
     {
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand command, CancellationToken ct)
+        private readonly IMediator _mediator;
+        public AuthController(IMediator mediator)
         {
-            var result = await mediator.Send(command, ct);
+            _mediator = mediator;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterCommand command, CancellationToken ct)
+        {
+            var result = await _mediator.Send(command, ct);
             return Ok(result);
         }
 
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken ct)
+        public async Task<IActionResult> Login(LoginCommand command, CancellationToken ct)
         {
-            var result = await mediator.Send(command, ct);
+            var result = await _mediator.Send(command, ct);
             return Ok(result);
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Application.Behaviors;
 using TaskManagement.Application.Features.Account.Login;
+using TaskManagement.Application.Features.Account.Register;
 using TaskManagement.Application.Security;
 using TaskManagement.Domain.Entities.UserEntities;
 using TaskManagement.Infrastructure.Data;
@@ -31,7 +32,7 @@ namespace TaskManagement
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<LoginHandler>());
             services.AddAutoMapper(typeof(Program));
 
-            services.AddValidatorsFromAssemblyContaining<Program>();
+            services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         }
     }
