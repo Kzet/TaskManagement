@@ -6,21 +6,21 @@ using TaskManagement.Domain.Interfaces;
 
 namespace TaskManagement.Application.Features.Projects.Handlers
 {
-    public class ProjectsByUserAndStatusHandler : IRequestHandler<ProjectsByUserAndStatusCommand, IEnumerable<ProjectDto>>
+    public class ProjectsByUserHandler : IRequestHandler<ProjectsByUserCommand, IEnumerable<ProjectDto>>
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IMapper _mapper;
 
-        public ProjectsByUserAndStatusHandler(IMapper mapper,
+        public ProjectsByUserHandler(IMapper mapper,
             IProjectRepository projectRepository)
         {
             _mapper = mapper;
             _projectRepository = projectRepository;
         }
 
-        public async Task<IEnumerable<ProjectDto>> Handle(ProjectsByUserAndStatusCommand request, CancellationToken ct)
+        public async Task<IEnumerable<ProjectDto>> Handle(ProjectsByUserCommand request, CancellationToken ct)
         {
-            var projects = await _projectRepository.GetProjectsByStatus(request.UserId, request.StatusId, ct);
+            var projects = await _projectRepository.GetProjects(request.UserId, ct);
             return _mapper.Map<List<ProjectDto>>(projects);
         }
     }

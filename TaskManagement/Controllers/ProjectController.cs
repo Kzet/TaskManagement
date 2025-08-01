@@ -30,5 +30,15 @@ namespace TaskManagement.Controllers
             return Ok(projects);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProjects()
+        {
+            var user = await _userManager.FindByNameAsync(User.GetLoggedInUserName());
+            var query = new ProjectsByUserCommand(user.Id);
+
+            var projects = await _mediator.Send(query);
+            return Ok(projects);
+        }
+
     }
 }
